@@ -1,5 +1,9 @@
 from config import *
 
+lastchecked = ""
+Queuesend = False
+queuechecked = ""
+
 
 
 @tasks.loop(seconds=180)
@@ -11,7 +15,7 @@ async def ServerStats():
     headers["Accept"] = "application/json"
     headers = {'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
     #Bearer Token Removed to public.
-    headers["Authorization"] = BearerTokenAPI
+    headers["Authorization"] = "Bearer " + BearerTokenAPI
     resp = requests.get(url, headers=headers)
     
     
@@ -19,12 +23,16 @@ async def ServerStats():
     Playerschannel_Var = client.get_channel(Playerschannel) #Put channel ID You want here.
     QueueChannel_Var = client.get_channel(QueueChannel)#Put channel ID 2 You want here.
     MinutesToWaitChannel_Var = client.get_channel(MinutesToWaitChannel)#Put channel ID 3 You want here.
+
+
     await discord.CategoryChannel.edit(CategoryName_Var, name = f"📊 {worldname} Server Stats 📊")
  
     print(colored (f"{prefix} Server responded with Status: {resp.status_code}", 'white','on_green'))
     
     if resp.status_code == 200:
         print(f"{prefix} Status is 200, Updating Stats...")
+
+        
         players = str(resp.json()['message']['players_current'])
         player_cap = str(resp.json()['message']['players_maximum']) # This is added because some worlds have a higher cap than others.
         queue = str(resp.json()['message']['queue_current'])
@@ -78,7 +86,7 @@ async def ServerStats():
             hour = 60*60
             amountofhours = 3
             minstowait = hour * amountofhours
-            channel = client.get_channel(900875069201481749)
+            channel = client.get_channel(Log_Channel)
             await channel.send(f"I have sent too many requests to the API, I will try again in {amountofhours} hour(s). ")
             await asyncio.sleep(minstowait)
             amountofhours += 0.5
@@ -86,5 +94,5 @@ async def ServerStats():
         else:
            # print("Status code is " + str(statuscode.status_code) + " - Retrying in 120 seconds."
            print(colored (f"{prefix} Error!! Status code: {resp.status_code}", 'white','on_red'))
-           channel = client.get_channel(900875069201481749)
+           channel = client.get_channel(Log_Channel)
         await channel.send(f"I have encountered an error with updating the server values. Please check the console. ")

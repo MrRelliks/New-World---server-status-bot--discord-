@@ -11,6 +11,7 @@ from discord_slash.model import ButtonStyle
 import requests
 from requests.structures import CaseInsensitiveDict
 import json
+import os
 
 import asyncio
 from termcolor import colored
@@ -31,10 +32,11 @@ prefix = f"@New World Bot :" #Change this if you want, its just what displays in
 BearerTokenAPI = "" #Grab your Bearer Token from https://newworldstatus.com/unofficial-status-api
 
 # Create three channels and grab the ID's for these variables.
-CategoryName = 904763473265823756 #Put channel ID You want here.
-Playerschannel = 904763518971166730 #Put channel ID You want here.
-QueueChannel = 904763557093203978 #Put channel ID 2 You want here.
-MinutesToWaitChannel = 904763596712603698 #Put channel ID 3 You want here.
+CategoryName = 905480752056107078 #Put channel ID You want here.
+Playerschannel = 905480752727216128 #Put channel ID You want here.
+QueueChannel = 905480753335386202 #Put channel ID 2 You want here.
+MinutesToWaitChannel = 905480753960353812 #Put channel ID 3 You want here.
+Log_Channel = 534534543543534534
 
 
 
