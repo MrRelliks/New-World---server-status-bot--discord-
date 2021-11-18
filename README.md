@@ -10,6 +10,12 @@ To set up just edit the config.py file with all of the information to make the b
 
 Docker File : (coming soon)
 
+If you want to view the output on Docker you need to use unbuffered output
+
+CMD ["python","-u","main.py"]
+
+
+
 If you like my work, buy me a coffee. https://ko-fi.com/mrrelliks
 
 
