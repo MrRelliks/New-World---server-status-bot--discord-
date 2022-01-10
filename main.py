@@ -13,6 +13,8 @@ clearConsole()
 
 guild_data = []
 
+
+
 @client.event
 async def on_ready():
 
