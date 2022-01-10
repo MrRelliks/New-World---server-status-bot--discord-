@@ -1,5 +1,5 @@
 # New-World---server-status-bot--discord-
-#### Update
+#### Update 10/01/2022
 Have recoded the bot to work with nwdb since they have merged with newworldstatus and the old method no longer works, as soon as a public API is released I'll update it again but this is the best we have so far.
 
 In order for the bot to work, please replace your worldupdate.py with the new one and change your worldname in config.py to your unique identifier, this can be found at https://nwdb.info/server-status/servers.json
