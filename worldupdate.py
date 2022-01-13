@@ -20,6 +20,7 @@ async def ServerStats():
     #Bearer Token Removed to public.
     #headers["Authorization"] = "Bearer " + BearerTokenAPI
     resp = requests.get(url, headers=headers)
+    data = resp.text
     
     
     CategoryName_Var = client.get_channel(CategoryName)
