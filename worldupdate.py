@@ -8,41 +8,35 @@ queuechecked = ""
 
 
 
-@tasks.loop(seconds=180)
+@tasks.loop(seconds=60)
 async def ServerStats():
-
     
-    url = "https://nwdb.info/server-status/servers.json?worldId=" + worldname
-    #world name is now a unique ID which can be found from https://nwdb.info/server-status/servers.json
+    worldid = "da497b523fed" # This is the unique world ID you will need. Find yours at https://nwdb.info/server-status/servers.json
+    url = f"https://nwdb.info/server-status/servers.json?worldId={worldid}"
     headers = CaseInsensitiveDict()
-    #headers["Accept"] = "application/json"
-    headers = {'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
-    #Bearer Token Removed to public.
-    #headers["Authorization"] = "Bearer " + BearerTokenAPI
+    headers["Accept"] = "application/json"
+    headers = {'User-agent': 'Talk to the devs in NWDB Discord about your own unique user agent.'} # Use your own User Agent here
     resp = requests.get(url, headers=headers)
+    response = resp.text
+    #data = resp.text
+    output = json.loads(response)
+
+ 
     
     
     CategoryName_Var = client.get_channel(CategoryName)
     Playerschannel_Var = client.get_channel(Playerschannel) #Put channel ID You want here.
     QueueChannel_Var = client.get_channel(QueueChannel)#Put channel ID 2 You want here.
     MinutesToWaitChannel_Var = client.get_channel(MinutesToWaitChannel)#Put channel ID 3 You want here.
-
-
     await discord.CategoryChannel.edit(CategoryName_Var, name = f"📊 {worldname} Server Stats 📊")
  
     print(colored (f"{prefix} Server responded with Status: {resp.status_code}", 'white','on_green'))
     
     if resp.status_code == 200:
         print(f"{prefix} Status is 200, Updating Stats...")
-
-        
-        players = str(data.split(",")[17])
-        queue = str(data.split(",")[18])
-
-        #player_cap = resp.json()[1][0] # This is added because some worlds have a higher cap than others.
-        #queue = str(resp.json()[1][2])
-        #wait = str(resp.json()['message']['queue_wait_time_minutes'])
-
+        players = output['data']['servers'][0][1]
+        player_cap = output['data']['servers'][0][0]
+        queue = output['data']['servers'][0][2]
         
         joinnow = datetime.now()
         join_time = joinnow.strftime("%H:%M:%S")
@@ -58,14 +52,14 @@ async def ServerStats():
 
         #Update current player count#
         try:
-            if(int(players) >= 500 and int(players) <= 999 ):
-                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🟢 Players: {players} / 2000")
+            if(int(players) >= 1 and int(players) <= 999 ):
+                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🟢 Players: {players} / {player_cap}")
             elif(int(players) >= 1000 and int(players) <= 1499):
-                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🟡 Players: {players} / 2000")
+                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🟡 Players: {players} / {player_cap}")
             elif(int(players) >=1500 and int(players) <=1899):
-                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🟠 Players: {players} / 2000")
+                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🟠 Players: {players} / {player_cap}")
             elif(int(players) >= 1900):
-                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🔴 Players: {players} / 2000")
+                await discord.VoiceChannel.edit(Playerschannel_Var, name = f"🔴 Players: {players} / {player_cap}")
             else:
                 await discord.VoiceChannel.edit(Playerschannel_Var, name = f"⚙️ Down For Maintenance")
 
@@ -93,7 +87,7 @@ async def ServerStats():
                 await discord.VoiceChannel.edit(QueueChannel_Var, name = f"❓ Queue: {queue}")
                 PreviousQueue = int(queue)
 
-            #Update Queue Wait Times
+            #pdate Queue Wait Times
             #await discord.VoiceChannel.edit(MinutesToWaitChannel_Var, name = f"⏲️ Wait Time: {wait} Mins.")
         except:
             print("Can not update server stats. Please use /help for configuration options.")
@@ -106,7 +100,7 @@ async def ServerStats():
             hour = 60*60
             amountofhours = 3
             minstowait = hour * amountofhours
-            channel = client.get_channel(Log_Channel)
+            channel = client.get_channel(900875069201481749)
             await channel.send(f"I have sent too many requests to the API, I will try again in {amountofhours} hour(s). ")
             await asyncio.sleep(minstowait)
             amountofhours += 0.5
@@ -114,5 +108,5 @@ async def ServerStats():
         else:
            # print("Status code is " + str(statuscode.status_code) + " - Retrying in 120 seconds."
            print(colored (f"{prefix} Error!! Status code: {resp.status_code}", 'white','on_red'))
-           channel = client.get_channel(Log_Channel)
+           channel = client.get_channel(900875069201481749)
         await channel.send(f"I have encountered an error with updating the server values. Please check the console. ")
