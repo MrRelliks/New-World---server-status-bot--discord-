@@ -1,4 +1,7 @@
 # New-World---server-status-bot--discord-
+#### Update 18/01/2022
+Refactored the code to work better with JSON data from the nwdb API - You will need to contact the nwdb devs to arrange a unique user agent that identifys you, Its not strictly necessary, but will help if you get rate limited.
+
 #### Update 10/01/2022
 Have recoded the bot to work with nwdb since they have merged with newworldstatus and the old method no longer works, as soon as a public API is released I'll update it again but this is the best we have so far.
 
