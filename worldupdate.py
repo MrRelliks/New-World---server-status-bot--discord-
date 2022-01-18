@@ -5,30 +5,39 @@ Queuesend = False
 queuechecked = ""
 
 
-
+# Updated 18/01/2022
+# Refactored the code to work better with JSON data.
 
 
 @tasks.loop(seconds=60)
 async def ServerStats():
     
-    worldid = "da497b523fed" # This is the unique world ID you will need. Find yours at https://nwdb.info/server-status/servers.json
+    def clearConsole():
+        command = 'clear'
+        if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
+            command = 'cls'
+        os.system(command)
+        file_object = open('ChatLogs/chatlog.txt', 'a')
+        file_object.write("Last Reset @  " + date + "\n")
+
+    #Clears console on launch to keep things tidy.
+    clearConsole()
+    worldid = "da497b523fed"
     url = f"https://nwdb.info/server-status/servers.json?worldId={worldid}"
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
-    headers = {'User-agent': 'Talk to the devs in NWDB Discord about your own unique user agent.'} # Use your own User Agent here
+    headers = {'User-agent': 'Use Your own unique user agent here'} # Contact Nwdb developers to arrange a User Agent to identify yourself with the API.
     resp = requests.get(url, headers=headers)
     response = resp.text
-    #data = resp.text
     output = json.loads(response)
 
- 
-    
-    
+    world_name = output['data']['servers'][0][4]
+
     CategoryName_Var = client.get_channel(CategoryName)
     Playerschannel_Var = client.get_channel(Playerschannel) #Put channel ID You want here.
     QueueChannel_Var = client.get_channel(QueueChannel)#Put channel ID 2 You want here.
     MinutesToWaitChannel_Var = client.get_channel(MinutesToWaitChannel)#Put channel ID 3 You want here.
-    await discord.CategoryChannel.edit(CategoryName_Var, name = f"📊 {worldname} Server Stats 📊")
+    await discord.CategoryChannel.edit(CategoryName_Var, name = f"📊 {world_name} Server Stats 📊")
  
     print(colored (f"{prefix} Server responded with Status: {resp.status_code}", 'white','on_green'))
     
@@ -44,11 +53,9 @@ async def ServerStats():
         print(colored (f"{prefix} Sucess!!", 'white','on_green'))
         print(f"{prefix} Player Count is {players} / {player_cap}")
         print(f"{prefix} Queue Count is {queue}")
-        #print(f"{prefix} Waiting Time  is  {wait}")
-
-
-
-
+        print("---------------------------------------")
+        print(f"There are currently {onlinenow} people playing New World.")
+        print("---------------------------------------")
 
         #Update current player count#
         try:
@@ -63,12 +70,7 @@ async def ServerStats():
             else:
                 await discord.VoiceChannel.edit(Playerschannel_Var, name = f"⚙️ Down For Maintenance")
 
-        
-
         #Update Queue Size
-            
-
-
 
             if(int(queue) >= 0 and int(queue) <= 34):
 
@@ -87,7 +89,7 @@ async def ServerStats():
                 await discord.VoiceChannel.edit(QueueChannel_Var, name = f"❓ Queue: {queue}")
                 PreviousQueue = int(queue)
 
-            #pdate Queue Wait Times
+            #Update Queue Wait Times - Uncomment if you want this.
             #await discord.VoiceChannel.edit(MinutesToWaitChannel_Var, name = f"⏲️ Wait Time: {wait} Mins.")
         except:
             print("Can not update server stats. Please use /help for configuration options.")
