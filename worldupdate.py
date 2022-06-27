@@ -22,8 +22,8 @@ async def ServerStats():
 
     #Clears console on launch to keep things tidy.
     clearConsole()
-    worldid = "da497b523fed"
-    url = f"https://nwdb.info/server-status/servers.json?worldId={worldid}"
+    worldid = "cbf907c70bc5" #ID For DryTree EU Server
+    url = f"https://nwdb.info/server-status/servers_24h.json?worldId={worldid}"
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
     headers = {'User-agent': 'Use Your own unique user agent here'} # Contact Nwdb developers to arrange a User Agent to identify yourself with the API.
