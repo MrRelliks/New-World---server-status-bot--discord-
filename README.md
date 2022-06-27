@@ -1,5 +1,8 @@
 # New-World---server-status-bot--discord-
 
+##  IMPORTANT NEWS - Update 27/06/2022
+The bot works again. NWDB have provided an API For the bot - You will need to ask them for a User Agent to add to the bot, that they will whitelist (to save you from being rate limited and banned)
+
 ##  IMPORTANT NEWS - Update 27/01/2022
 AGS have seemingly stopped providing data for Player counts and as a result nwdb's API is now useless to this project. With no other source of information, this project will likley be retired until such a time an alternative is found.
 
